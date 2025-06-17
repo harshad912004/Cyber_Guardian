@@ -75,3 +75,30 @@ function handleKeyPress(event) {
         sendMessage();
     }
 }
+
+
+function searchTable(tableId, searchInputId) {
+	const table = document.getElementById(tableId);
+	const searchInput = document.getElementById(searchInputId);
+
+	if (!table || !searchInput) return;
+
+	const tbodyRows = table.querySelectorAll("tbody tr");
+
+	// Debounce to improve performance on large datasets
+	let timeout = null;
+	searchInput.addEventListener("keyup", function () {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			const searchTerm = this.value.trim().toLowerCase();
+
+			tbodyRows.forEach((row) => {
+				const cells = row.querySelectorAll("td");
+				const matchFound = Array.from(cells).some(cell =>
+					cell.textContent.toLowerCase().includes(searchTerm)
+				);
+				row.style.display = matchFound ? "" : "none";
+			});
+		}, 200); // Debounce delay
+	});
+}
